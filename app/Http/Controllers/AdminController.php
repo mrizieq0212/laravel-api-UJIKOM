@@ -55,7 +55,7 @@ class AdminController extends Controller
     {
         $request->validate([
             'nama_alat' => 'required|string|max:255',
-            'kategori_id' => 'required|exists:kategoris,id',
+            'kategori_id' => 'required|exists:kategori,id',
             'stok' => 'required|integer|min:0',
             'status_kondisi' => 'required|string|max:100',
             'deskripsi' => 'nullable|string',
@@ -95,7 +95,7 @@ class AdminController extends Controller
 
         $request->validate([
             'nama_alat' => 'required|string|max:255',
-            'kategori_id' => 'required|exists:kategoris,id',
+            'kategori_id' => 'required|exists:kategori,id',
             'stok' => 'required|integer|min:0',
             'status_kondisi' => 'required|string|max:100',
             'deskripsi' => 'nullable|string',
@@ -252,7 +252,7 @@ class AdminController extends Controller
     public function storeKategori(Request $request)
     {
         $request->validate([
-            'nama_kategori' => 'required|string|max:255|unique:kategoris,nama_kategori',
+            'nama_kategori' => 'required|string|max:255|unique:kategori,nama_kategori',
         ]);
 
         Kategori::create([
@@ -277,7 +277,7 @@ class AdminController extends Controller
         $kategori = Kategori::findOrFail($id);
 
         $request->validate([
-            'nama_kategori' => 'required|string|max:255|unique:kategoris,nama_kategori,' . $id,
+            'nama_kategori' => 'required|string|max:255|unique:kategori,nama_kategori,' . $id,
         ]);
 
         $kategori->update([
@@ -304,7 +304,6 @@ class AdminController extends Controller
         return redirect()->route('admin.kategori.index')
                          ->with('success', 'Kategori berhasil dihapus.');
     }
-
     // 1. Menampilkan daftar peminjaman
 public function indexPengembalian()
 {
@@ -325,10 +324,11 @@ public function indexPengembalian()
 
     // Riwayat pengembalian
     $riwayat = Pengembalian::with([
-        'peminjaman.user'
+    'peminjaman.user'
     ])
     ->latest()
-    ->get();
+    ->paginate(10)
+    ->withQueryString();
 
     return view('admin.pengembalian.index', compact(
         'pengembalians',
@@ -336,7 +336,32 @@ public function indexPengembalian()
         'riwayat'
     ));
 }
+// 1. Menampilkan daftar peminjaman
+public function indexPeminjaman(Request $request)
+{
+    $search = $request->input('search');
 
+    $peminjamans = Peminjaman::with([
+        'user',
+        'detailPinjams.alat'
+    ])
+    ->when($search, function ($query, $search) {
+        return $query
+            ->whereHas('user', function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%");
+            })
+            ->orWhere('status', 'like', "%{$search}%");
+    })
+    ->latest()
+    ->paginate(10)
+    ->withQueryString();
+
+    return view('admin.peminjaman.index', compact(
+        'peminjamans',
+        'search'
+    ));
+}
 // 2. Menampilkan form tambah peminjaman
 public function createPeminjaman()
 {

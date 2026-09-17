@@ -28,9 +28,9 @@ class UserSeeder extends Seeder
                 'alamat' => 'Bandung, West Java',
             ],
             [
-                'name' => 'Arif Muhammad',
+                'name' => 'rizik',
                 'email' => 'petugas@gmail.com',
-                'password' => Hash::make('password123'),
+                'password' => Hash::make('rizik12345678'),
                 'role' => 'petugas',
                 'no_hp' => '082345678901',
                 'alamat' => 'Baleendah, Bandung',

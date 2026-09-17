@@ -10,13 +10,23 @@ class Pengembalian extends Model
 
     protected $fillable = [
         'peminjaman_id',
-        'tanggal_pengembalian',
-        'kondisi',
+        'tgl_kembali',
+        'kondisi_kembali',
         'denda',
+        'petugas_id',
+    ];
+
+    protected $casts = [
+        'tgl_kembali' => 'date',
     ];
 
     public function peminjaman()
     {
         return $this->belongsTo(Peminjaman::class, 'peminjaman_id');
+    }
+
+    public function petugas()
+    {
+        return $this->belongsTo(User::class, 'petugas_id');
     }
 }

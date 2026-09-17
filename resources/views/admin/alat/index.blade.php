@@ -1,4 +1,3 @@
-```blade
 @extends('layouts.app')
 
 @section('title', 'Kelola Alat - Panel Admin')
@@ -204,4 +203,3 @@
     </div>
 
 @endsection
-```

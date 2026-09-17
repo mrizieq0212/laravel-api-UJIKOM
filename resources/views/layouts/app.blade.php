@@ -3,30 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'Dashboard Admin')</title>
+    <title>@yield('title', 'Dashboard')</title>
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <link rel="stylesheet" href="{{ asset('css/tema-peminjaman-alat.css') }}">
 </head>
 <body class="bg-gray-100 font-sans antialiased">
 
     <div class="flex h-screen overflow-hidden">
 
         <aside class="w-64 bg-gray-900 text-white flex flex-col hidden md:flex">
-            <div class="p-5 text-xl font-bold tracking-wider border-b border-gray-800">
-                PANEL ADMIN
+            <div class="p-5 border-b border-gray-800 flex flex-col items-center text-center">
+                @if(auth()->user()->role === 'admin')
+                    <img src="{{ asset('images/logo-admin.png') }}" alt="Logo Admin" class="w-16 h-16 object-contain mb-2">
+                    <span class="text-lg font-bold tracking-wider">Admin</span>
+                @elseif(auth()->user()->role === 'petugas')
+                    <img src="{{ asset('images/logo-admin.png') }}" alt="Logo Petugas" class="w-16 h-16 object-contain mb-2">
+                    <span class="text-lg font-bold tracking-wider">Petugas</span>
+                @else
+                    <span class="text-xl font-bold tracking-wider">DASHBOARD</span>
+                @endif
             </div>
             <nav class="flex-1 p-4 space-y-2">
-            <a href="{{ route('admin.dashboard') }}"
-            class="block px-4 py-2 rounded-lg bg-gray-800 text-white font-medium">Dashboard</a>
-            <a href="{{ route('admin.user.index') }}"
-            class="block px-4 py-2 rounded-lg text-gray-400 hover:bg-gray-800 hover:text-white transition">Kelola User</a>
-            <a href="{{ route('admin.kategori.index') }}"
-            class="block px-4 py-2 rounded-lg text-gray-400 hover:bg-gray-800 hover:text-white transition">Kelola Kategori</a>
-            <a href="{{ route('admin.alat.index') }}"
-            class="block px-4 py-2 rounded-lg text-gray-400 hover:bg-gray-800 hover:text-white transition">Kelola Alat</a>
-            <a href="{{ route('admin.peminjaman.index') }}"
-            class="block px-4 py-2 rounded-lg text-gray-400 hover:bg-gray-800 hover:text-white transition">Kelola Peminjaman</a>
-            <a href="{{ route('admin.pengembalian.index') }}"
-            class="block px-4 py-2 rounded-lg text-gray-400 hover:bg-gray-800 hover:text-white transition">Kelola Pengembalian</a>
+
+                @if(auth()->user()->role === 'admin')
+                    {{-- MENU KHUSUS ADMIN --}}
+                    <a href="{{ route('admin.dashboard') }}"
+                        class="block px-4 py-2 rounded-lg transition {{ request()->routeIs('admin.dashboard') ? 'bg-gray-800 text-white font-medium shadow' : 'text-gray-400 hover:bg-gray-800 hover:text-white' }}">
+                        Dashboard</a>
+                    <a href="{{ route('admin.user.index') }}"
+                        class="block px-4 py-2 rounded-lg transition {{ request()->routeIs('admin.user*') ? 'bg-gray-800 text-white font-medium shadow' : 'text-gray-400 hover:bg-gray-800 hover:text-white' }}">
+                        Kelola User</a>
+                    <a href="{{ route('admin.kategori.index') }}"
+                        class="block px-4 py-2 rounded-lg transition {{ request()->routeIs('admin.kategori*') ? 'bg-gray-800 text-white font-medium shadow' : 'text-gray-400 hover:bg-gray-800 hover:text-white' }}">
+                        Kelola Kategori</a>
+                    <a href="{{ route('admin.alat.index') }}"
+                        class="block px-4 py-2 rounded-lg transition {{ request()->routeIs('admin.alat*') ? 'bg-gray-800 text-white font-medium shadow' : 'text-gray-400 hover:bg-gray-800 hover:text-white' }}">
+                        Kelola Alat</a>
+                    <a href="{{ route('admin.peminjaman.index') }}"
+                        class="block px-4 py-2 rounded-lg transition {{ request()->routeIs('admin.peminjaman*') ? 'bg-gray-800 text-white font-medium shadow' : 'text-gray-400 hover:bg-gray-800 hover:text-white' }}">
+                        Kelola Peminjaman</a>
+                    <a href="{{ route('admin.pengembalian.index') }}"
+                        class="block px-4 py-2 rounded-lg transition {{ request()->routeIs('admin.pengembalian*') ? 'bg-gray-800 text-white font-medium shadow' : 'text-gray-400 hover:bg-gray-800 hover:text-white' }}">
+                        Kelola Pengembalian</a>
+
+                @elseif(auth()->user()->role === 'petugas')
+                    {{-- MENU KHUSUS PETUGAS --}}
+                    <a href="{{ route('petugas.peminjaman.index') }}"
+                        class="block px-4 py-2 rounded-lg transition {{ request()->routeIs('petugas.peminjaman*') ? 'bg-gray-800 text-white font-medium shadow' : 'text-gray-400 hover:bg-gray-800 hover:text-white' }}">
+                        Persetujuan Peminjaman</a>
+                    <a href="{{ route('petugas.pengembalian.index') }}"
+                        class="block px-4 py-2 rounded-lg transition {{ request()->routeIs('petugas.pengembalian*') ? 'bg-gray-800 text-white font-medium shadow' : 'text-gray-400 hover:bg-gray-800 hover:text-white' }}">
+                        Pemantauan Pengembalian</a>
+                    <a href="{{ route('petugas.laporan.index') }}"
+                        class="block px-4 py-2 rounded-lg transition {{ request()->routeIs('petugas.laporan*') ? 'bg-gray-800 text-white font-medium shadow' : 'text-gray-400 hover:bg-gray-800 hover:text-white' }}">
+                        Cetak Laporan</a>
+                @endif
+
             </nav>
             <div class="p-4 border-t border-gray-800 text-sm text-gray-400">
                 Logged in as: <span class="text-white font-semibold">{{ auth()->user()->name }}</span>
@@ -55,22 +88,6 @@
 
         </div>
     </div>
-
-        {{-- MENU KHUSUS PETUGAS --}}
-    @if(auth()->user()->role === 'petugas')
-        <a href="{{ route('petugas.peminjaman.index') }}"
-            class="block px-4 py-2 rounded-lg transition {{ request()->routeIs('petugas.peminjaman*') ? 'bg-gray-800 text-white font-medium shadow' : 'text-gray-400 hover:bg-gray-800 hover:text-white' }}">
-            Persetujuan Peminjaman</a>
-
-        <a href="{{ route('petugas.pengembalian.index') }}"
-            class="block px-4 py-2 rounded-lg transition {{ request()->routeIs('petugas.pengembalian*') ? 'bg-gray-800 text-white font-medium shadow' : 'text-gray-400 hover:bg-gray-800 hover:text-white' }}">
-            Pemantauan Pengembalian</a>
-
-        <a href="{{ route('petugas.laporan.index') }}"
-            class="block px-4 py-2 rounded-lg transition {{ request()->routeIs('petugas.laporan*') ? 'bg-gray-800 text-white font-medium shadow' : 'text-gray-400 hover:bg-gray-800 hover:text-white' }}">
-            Cetak Laporan</a>
-    @endif
-</nav>
 
 </body>
 </html>

@@ -1,0 +1,135 @@
+/* ============================================================
+   Tema "Ruang Alat" — dashboard peminjaman alat
+   Konsep: pegboard bengkel (papan berlubang tempat alat digantung)
+   Disesuaikan untuk layout Tailwind (aside, header, main bawaan Blade kamu)
+   Cara pakai: <link rel="stylesheet" href="{{ asset('css/tema-peminjaman-alat.css') }}">
+   Letakkan SETELAH <script src="https://cdn.tailwindcss.com"></script>
+   ============================================================ */
+
+:root {
+  --baja-gelap:   #1b2430;
+  --baja-sedang:  #2f3e4f;
+  --papan:        #e7e2d8;
+  --papan-terang: #f3f0e9;
+  --amber:        #c8861a;
+  --amber-lembut: #f6e7c8;
+  --teks:         #232b33;
+  --teks-redup:   #6b7681;
+}
+
+/* ---------- Background utama: pegboard bengkel ---------- */
+body.bg-gray-100 {
+  background-color: var(--papan) !important;
+  background-image:
+    radial-gradient(circle at center, rgba(27, 36, 48, .14) 1.4px, transparent 1.5px),
+    linear-gradient(180deg, var(--papan-terang) 0%, var(--papan) 340px);
+  background-size: 26px 26px, 100% 100%;
+  background-attachment: fixed;
+  color: var(--teks);
+}
+
+/* ---------- Sidebar (aside bg-gray-900) ---------- */
+aside.bg-gray-900 {
+  background: linear-gradient(180deg, var(--baja-gelap) 0%, #141c25 100%) !important;
+  border-right: 1px solid rgba(255, 255, 255, .06);
+}
+
+/* Link menu non-aktif */
+aside nav a.text-gray-400 {
+  color: #c3ccd6 !important;
+  border-left: 3px solid transparent;
+  transition: background-color .15s ease, border-color .15s ease;
+}
+
+aside nav a.text-gray-400:hover {
+  background-color: rgba(255, 255, 255, .06) !important;
+}
+
+/* Link menu aktif (bg-gray-800) — diberi penanda amber di kiri */
+aside nav a.bg-gray-800 {
+  background: var(--baja-sedang) !important;
+  border-left: 3px solid var(--amber);
+}
+
+/* ---------- Header atas ---------- */
+header.bg-white {
+  background: var(--papan-terang) !important;
+  border-bottom: 1px solid rgba(27, 36, 48, .12);
+  position: relative;
+}
+
+/* Garis marka amber putus-putus di bawah header, seperti lantai bengkel */
+header.bg-white::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -3px;
+  height: 3px;
+  background: repeating-linear-gradient(
+    -45deg,
+    var(--amber) 0 10px,
+    #a86e12 10px 20px
+  );
+  opacity: .55;
+}
+
+/* ---------- Tombol logout ---------- */
+header form button.bg-red-500 {
+  background-color: #a33a2b !important;
+}
+header form button.bg-red-500:hover {
+  background-color: #8a3024 !important;
+}
+
+/* ---------- Area konten ---------- */
+main {
+  background: transparent;
+}
+
+/* Kartu/panel generik yang mungkin dipakai di halaman lain (rounded-lg shadow) */
+main .rounded-lg.shadow,
+main .shadow-sm.rounded-lg {
+  background: #fff;
+  border: 1px solid rgba(27, 36, 48, .12);
+}
+
+/* ---------- Tabel log aktivitas ---------- */
+main table thead th {
+  background: #eceadf;
+  color: var(--teks-redup);
+  font-weight: 600;
+  border-bottom: 2px solid rgba(27, 36, 48, .18);
+}
+
+main table tbody tr:hover {
+  background: var(--amber-lembut);
+}
+
+main table td:first-child {
+  font-variant-numeric: tabular-nums;
+  color: var(--teks-redup);
+}
+
+/* ---------- Kotak sambutan hijau ---------- */
+main .bg-green-50,
+main .bg-green-100 {
+  background: #fdf6e6 !important;
+  border: 1px solid rgba(200, 134, 26, .35) !important;
+  border-left: 4px solid var(--amber) !important;
+  color: #5c4310 !important;
+}
+
+/* ---------- Badge status peminjaman (opsional, pasang manual di blade) ---------- */
+.badge-dipinjam   { background: var(--amber);      color: #fff; padding: .15rem .6rem; border-radius: 9999px; font-size: .75rem; }
+.badge-tersedia   { background: #3f7d58;           color: #fff; padding: .15rem .6rem; border-radius: 9999px; font-size: .75rem; }
+.badge-terlambat  { background: #a33a2b;           color: #fff; padding: .15rem .6rem; border-radius: 9999px; font-size: .75rem; }
+.badge-menunggu   { background: var(--teks-redup); color: #fff; padding: .15rem .6rem; border-radius: 9999px; font-size: .75rem; }
+
+/* ---------- Aksesibilitas ---------- */
+:focus-visible {
+  outline: 2px solid var(--amber);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; }
+}
